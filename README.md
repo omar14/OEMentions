@@ -19,6 +19,8 @@ All you need is to import `OEMentions.swift` to your project folder
 
 
 ## Usage Example
+You can see a full implementation in ViewController.swift
+
 1. Refrence UITextView outlet and "Optional: Container (UIView that has UITextView in it)"
   
   ```swift
