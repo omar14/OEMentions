@@ -13,10 +13,14 @@ protocol OEMentionsDelegate
     func mentionSelected(id:Int, name:String)
 }
 
+
 class OEMentions: NSObject, UITextViewDelegate, UITableViewDelegate, UITableViewDataSource {
     
     // UIViewController view
     var mainView:UIView?
+    
+    // UIView for the textview container
+    var containerView:UIView?
     
     // The UITextView we want to add mention to
     var textView:UITextView?
@@ -42,13 +46,11 @@ class OEMentions: NSObject, UITextViewDelegate, UITableViewDelegate, UITableView
     // Keyboard hieght after it shows
     var keyboardHieght:CGFloat?
     
-    // The UITextView width
-    var textViewWidth:CGFloat?
     
     // Mentions tableview
     var tableView: UITableView!
     
-    //MARK: Customisable mention text properties
+    //MARK: Customisable mention list properties
     
     // Color of the mention tableview name text
     var nameColor = UIColor.blueColor()
@@ -63,14 +65,42 @@ class OEMentions: NSObject, UITextViewDelegate, UITableViewDelegate, UITableView
     // OEMention Delegate
     var delegate:OEMentionsDelegate?
     
-    //MARK: class init
+    
+    var textViewWidth:CGFloat?
+    var textViewHieght:CGFloat?
+    var textViewYPosition:CGFloat?
+    
+    var containerHieght:CGFloat?
+    
+    //MARK: class init without container
     init(textView:UITextView, mainView:UIView, oeObjects:[OEObject]){
         super.init()
+        
         self.mainView = mainView
         self.oeObjects = oeObjects
         self.textView = textView
         
         self.textViewWidth = textView.frame.width
+        
+        initMentionsList()
+        
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(OEMentions.keyboardWillShow(_:)), name: UIKeyboardWillShowNotification, object: nil)
+    }
+    
+    //MARK: class init with container
+    init(containerView:UIView, textView:UITextView, mainView:UIView, oeObjects:[OEObject]){
+        super.init()
+        
+        self.containerView = containerView
+        self.mainView = mainView
+        self.oeObjects = oeObjects
+        self.textView = textView
+        
+        self.containerHieght = containerView.frame.height
+        
+        self.textViewWidth = textView.frame.width
+        self.textViewHieght = textView.frame.height
+        self.textViewYPosition = textView.frame.origin.y
         
         initMentionsList()
         
@@ -83,6 +113,11 @@ class OEMentions: NSObject, UITextViewDelegate, UITableViewDelegate, UITableView
         if character.characters.count == 1 && character != " " {
             self.mentionCharater = character
         }
+    }
+    
+    // Change tableview background color
+    func changeMentionTableviewBackground(color: UIColor){
+        self.tableView.backgroundColor = color
     }
     
     
@@ -174,6 +209,7 @@ class OEMentions: NSObject, UITextViewDelegate, UITableViewDelegate, UITableView
     }
     
     
+    
     //MARK: Keyboard will show NSNotification:
     
     func keyboardWillShow(notification:NSNotification) {
@@ -220,6 +256,7 @@ class OEMentions: NSObject, UITextViewDelegate, UITableViewDelegate, UITableView
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         
         let cell:UITableViewCell=UITableViewCell(style: UITableViewCellStyle.Subtitle, reuseIdentifier: "cell")
+        cell.backgroundColor = UIColor.clearColor()
         cell.selectionStyle = UITableViewCellSelectionStyle.None
         cell.textLabel!.text = oeObjects![indexPath.row].name
         
@@ -249,7 +286,6 @@ class OEMentions: NSObject, UITextViewDelegate, UITableViewDelegate, UITableView
         
         mentionsIndexes[self.startMentionIndex] = name.characters.count
         
-        print("The replaced: ", "@" + self.mentionQuery)
         let range: Range<String.Index> = self.textView!.text.rangeOfString("@" + self.mentionQuery)!
         self.textView!.text.replaceRange(range, with: name)
         
@@ -282,12 +318,24 @@ class OEMentions: NSObject, UITextViewDelegate, UITableViewDelegate, UITableView
     // Update views potision for the textview and tableview
     func updatePosition(){
         
-        self.textView!.frame.origin.y = UIScreen.mainScreen().bounds.height - self.keyboardHieght! - self.textView!.frame.height
-        self.tableView.frame.size.height = UIScreen.mainScreen().bounds.height - self.keyboardHieght! - self.textView!.frame.height
+        if containerView != nil {
+            self.containerView!.frame.size.height = self.containerHieght! + ( self.textView!.frame.height -  self.textViewHieght! )
+            self.containerView!.frame.origin.y = UIScreen.mainScreen().bounds.height - self.keyboardHieght! - self.containerView!.frame.height
+            
+            self.textView!.frame.origin.y = self.textViewYPosition!
+            
+            self.tableView.frame.size.height = UIScreen.mainScreen().bounds.height - self.keyboardHieght! - self.containerView!.frame.size.height
+        }
+        else {
+            self.textView!.frame.origin.y = UIScreen.mainScreen().bounds.height - self.keyboardHieght! - self.textView!.frame.height
+            self.tableView.frame.size.height = UIScreen.mainScreen().bounds.height - self.keyboardHieght! - self.textView!.frame.height
+        }
+        
         
     }
     
 }
+
 
 class OEObject {
     
