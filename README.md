@@ -44,7 +44,7 @@ All you need is to import `OEMentions.swift` to your project folder
   oeMentions = OEMentions(containerView: containerView, textView: textView, mainView: self.view, oeObjects: oeObjects)
   ```
 
-5. Assign UITextView to OEMentions
+5. Assign UITextView delegate to OEMentions
 
   ```swift
   textView.delegate = oeMentions
