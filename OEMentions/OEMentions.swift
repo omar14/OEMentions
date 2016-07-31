@@ -8,6 +8,11 @@
 
 import UIKit
 
+protocol OEMentionsDelegate
+{
+    func mentionSelected(id:Int, name:String)
+}
+
 class OEMentions: NSObject, UITextViewDelegate, UITableViewDelegate, UITableViewDataSource {
     
     // UIViewController view
@@ -17,7 +22,7 @@ class OEMentions: NSObject, UITextViewDelegate, UITableViewDelegate, UITableView
     var textView:UITextView?
     
     // List of names to show in the list
-    var names:[String]?
+    var oeObjects:[OEObject]?
     
     // [Index:Length] of added mentions to textview
     var mentionsIndexes = [Int:Int]()
@@ -26,7 +31,7 @@ class OEMentions: NSObject, UITextViewDelegate, UITableViewDelegate, UITableView
     var isMentioning = Bool()
     
     // The search query
-    var mentionQuery = ""
+    var mentionQuery = String()
     
     // The start of mention index
     var startMentionIndex = Int()
@@ -46,21 +51,23 @@ class OEMentions: NSObject, UITextViewDelegate, UITableViewDelegate, UITableView
     //MARK: Customisable mention text properties
     
     // Color of the mention tableview name text
-    var nameColor = UIColor(red: 13 / 255, green: 135 / 255, blue: 125 / 255, alpha: 1.0)
+    var nameColor = UIColor.blueColor()
     
     // Font of the mention tableview name text
-    var nameFont = UIFont(name: "HelveticaNeue-Bold", size: 13.0)
+    var nameFont = UIFont.boldSystemFontOfSize(14.0)
     
     // Color if the rest of the UITextView text
     var notMentionColor = UIColor.blackColor()
     
     
-    //MARK: class init
+    // OEMention Delegate
+    var delegate:OEMentionsDelegate?
     
-    init(textView:UITextView, mainView:UIView, names:[String]){
+    //MARK: class init
+    init(textView:UITextView, mainView:UIView, oeObjects:[OEObject]){
         super.init()
         self.mainView = mainView
-        self.names = names
+        self.oeObjects = oeObjects
         self.textView = textView
         
         self.textViewWidth = textView.frame.width
@@ -207,14 +214,14 @@ class OEMentions: NSObject, UITextViewDelegate, UITableViewDelegate, UITableView
     //MARK: Mentions UITableView deleget functions:
     
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return self.names!.count
+        return self.oeObjects!.count
     }
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         
         let cell:UITableViewCell=UITableViewCell(style: UITableViewCellStyle.Subtitle, reuseIdentifier: "cell")
         cell.selectionStyle = UITableViewCellSelectionStyle.None
-        cell.textLabel!.text = names![indexPath.row]
+        cell.textLabel!.text = oeObjects![indexPath.row].name
         
         return cell
         
@@ -222,8 +229,12 @@ class OEMentions: NSObject, UITextViewDelegate, UITableViewDelegate, UITableView
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         
-        addMentionToTextView(names![indexPath.row])
+        addMentionToTextView(oeObjects![indexPath.row].name!)
         
+        if delegate != nil {
+            self.delegate!.mentionSelected(oeObjects![indexPath.row].id!, name: oeObjects![indexPath.row].name!)
+        }
+                
         self.mentionQuery = ""
         self.isMentioning = false
         UIView.animateWithDuration(0.2, animations: {
@@ -250,7 +261,7 @@ class OEMentions: NSObject, UITextViewDelegate, UITableViewDelegate, UITableView
         for (startIndex, length) in mentionsIndexes {
             // Add attributes for the mention
             attributedString.addAttribute(NSForegroundColorAttributeName, value: nameColor, range: NSMakeRange(startIndex, length))
-            attributedString.addAttribute(NSFontAttributeName, value: nameFont!, range: NSMakeRange(startIndex, length))
+            attributedString.addAttribute(NSFontAttributeName, value: nameFont, range: NSMakeRange(startIndex, length))
         }
         
         // Add for the rest
@@ -274,6 +285,18 @@ class OEMentions: NSObject, UITextViewDelegate, UITableViewDelegate, UITableView
         self.textView!.frame.origin.y = UIScreen.mainScreen().bounds.height - self.keyboardHieght! - self.textView!.frame.height
         self.tableView.frame.size.height = UIScreen.mainScreen().bounds.height - self.keyboardHieght! - self.textView!.frame.height
         
+    }
+    
+}
+
+class OEObject {
+    
+    var id:Int?
+    var name:String?
+    
+    init(id:Int, name:String){
+        self.id = id
+        self.name = name
     }
     
 }
