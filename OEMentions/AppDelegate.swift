@@ -2,7 +2,7 @@
 //  AppDelegate.swift
 //  OEMentions
 //
-//  Created by Omar Al-Essa on 7/31/16.
+//  Created by Omar Alessa on 7/31/16.
 //  Copyright © 2016 omaressa. All rights reserved.
 //
 

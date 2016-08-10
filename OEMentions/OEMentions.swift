@@ -10,6 +10,7 @@ import UIKit
 
 protocol OEMentionsDelegate
 {
+    // To respond to the selected name
     func mentionSelected(id:Int, name:String)
 }
 
@@ -50,7 +51,7 @@ class OEMentions: NSObject, UITextViewDelegate, UITableViewDelegate, UITableView
     // Mentions tableview
     var tableView: UITableView!
     
-    //MARK: Customisable mention list properties
+    //MARK: Customizable mention list properties
     
     // Color of the mention tableview name text
     var nameColor = UIColor.blueColor()
@@ -153,13 +154,13 @@ class OEMentions: NSObject, UITextViewDelegate, UITableViewDelegate, UITableView
             lastCharacter = String(str[str.startIndex.advancedBy(range.location-1)])
         }
         
-        if mentionsIndexes.count != 0 { // There is mentions
+        // Check if there is mentions
+        if mentionsIndexes.count != 0 {
             
             for (index,length) in mentionsIndexes {
-                print("The mention is from: ", index, " To: ", (index + length))
                 
                 if case index ... index+length = range.location {
-                    print("delete the username")
+                    // If start typing within a mention rang delete that name:
                     textView.replaceRange((textView.textRangeFromNSRange(NSMakeRange(index, length)))!, withText: "")
                     mentionsIndexes.removeValueForKey(index)
                 }
@@ -181,15 +182,9 @@ class OEMentions: NSObject, UITextViewDelegate, UITableViewDelegate, UITableView
             else if text.characters.count == 0 {
                 self.mentionQuery.removeAtIndex(self.mentionQuery.endIndex.predecessor())
                 
-                //TODO: Filter array
-                //self.getMentionUsers(self.mentionQuery)
-                
             }
             else {
                 self.mentionQuery += text
-                
-                //TODO: Filtet array
-                //self.getMentionUsers(self.mentionQuery)
                 
             }
         }
@@ -213,8 +208,6 @@ class OEMentions: NSObject, UITextViewDelegate, UITableViewDelegate, UITableView
     //MARK: Keyboard will show NSNotification:
     
     func keyboardWillShow(notification:NSNotification) {
-        
-        print("Hey!")
         
         let userInfo:NSDictionary = notification.userInfo!
         let keyboardFrame:NSValue = userInfo.valueForKey(UIKeyboardFrameEndUserInfoKey) as! NSValue
@@ -336,6 +329,8 @@ class OEMentions: NSObject, UITextViewDelegate, UITableViewDelegate, UITableView
     
 }
 
+
+// OEMentions object (id,name)
 
 class OEObject {
     
