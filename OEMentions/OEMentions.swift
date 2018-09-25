@@ -54,13 +54,13 @@ class OEMentions: NSObject, UITextViewDelegate, UITableViewDelegate, UITableView
     //MARK: Customizable mention list properties
     
     // Color of the mention tableview name text
-    var nameColor = UIColor.blueColor()
+    var nameColor = UIColor.blue
     
     // Font of the mention tableview name text
-    var nameFont = UIFont.boldSystemFontOfSize(14.0)
+    var nameFont = UIFont.boldSystemFont(ofSize: 14.0)
     
     // Color if the rest of the UITextView text
-    var notMentionColor = UIColor.blackColor()
+    var notMentionColor = UIColor.black
     
     
     // OEMention Delegate
@@ -85,7 +85,7 @@ class OEMentions: NSObject, UITextViewDelegate, UITableViewDelegate, UITableView
         
         initMentionsList()
         
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(OEMentions.keyboardWillShow(_:)), name: UIKeyboardWillShowNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(OEMentions.keyboardWillShow(notification:)), name: UIResponder.keyboardWillShowNotification, object: nil)
     }
     
     //MARK: class init with container
@@ -105,13 +105,13 @@ class OEMentions: NSObject, UITextViewDelegate, UITableViewDelegate, UITableView
         
         initMentionsList()
         
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(OEMentions.keyboardWillShow(_:)), name: UIKeyboardWillShowNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(OEMentions.keyboardWillShow(notification:)), name: UIResponder.keyboardWillShowNotification, object: nil)
     }
     
     
     // Set the mention character. Should be one character only, default is "@"
     func changeMentionCharacter(character: String){
-        if character.characters.count == 1 && character != " " {
+        if character.count == 1 && character != " " {
             self.mentionCharater = character
         }
     }
@@ -124,19 +124,19 @@ class OEMentions: NSObject, UITextViewDelegate, UITableViewDelegate, UITableView
     
     //MARK: UITextView delegate functions:
     
-    func textViewDidEndEditing(textView: UITextView) {
+    func textViewDidEndEditing(_ textView: UITextView) {
         
         self.mentionQuery = ""
         self.isMentioning = false
-        UIView.animateWithDuration(0.2, animations: {
-            self.tableView.hidden = true
+        UIView.animate(withDuration: 0.2, animations: {
+            self.tableView.isHidden = true
         })
         
     }
     
-    func textViewDidChange(textView: UITextView) {
+    func textViewDidChange(_ textView: UITextView) {
         
-        self.textView!.scrollEnabled = false
+        self.textView!.isScrollEnabled = false
         self.textView!.sizeToFit()
         self.textView!.frame.size.width = textViewWidth!
         
@@ -145,13 +145,13 @@ class OEMentions: NSObject, UITextViewDelegate, UITableViewDelegate, UITableView
         
     }
     
-    func textView(textView: UITextView, shouldChangeTextInRange range: NSRange, replacementText text: String) -> Bool {
+    func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
         
         let str = String(textView.text)
         var lastCharacter = "nothing"
         
         if !str.isEmpty && range.location != 0{
-            lastCharacter = String(str[str.startIndex.advancedBy(range.location-1)])
+            lastCharacter = String(str[str.index(before: str.endIndex)])
         }
         
         // Check if there is mentions
@@ -161,8 +161,9 @@ class OEMentions: NSObject, UITextViewDelegate, UITableViewDelegate, UITableView
                 
                 if case index ... index+length = range.location {
                     // If start typing within a mention rang delete that name:
-                    textView.replaceRange((textView.textRangeFromNSRange(NSMakeRange(index, length)))!, withText: "")
-                    mentionsIndexes.removeValueForKey(index)
+                    
+                    textView.replace(textView.textRangeFromNSRange(range: NSMakeRange(index, length))!, withText: "")
+                    mentionsIndexes.removeValue(forKey: index)
                 }
                 
             }
@@ -170,31 +171,30 @@ class OEMentions: NSObject, UITextViewDelegate, UITableViewDelegate, UITableView
         
         
         if isMentioning {
-            if text == " " || (text.characters.count == 0 &&  self.mentionQuery == ""){ // If Space or delete the "@"
+            if text == " " || (text.count == 0 &&  self.mentionQuery == ""){ // If Space or delete the "@"
                 self.mentionQuery = ""
                 self.isMentioning = false
-                UIView.animateWithDuration(0.2, animations: {
+                UIView.animate(withDuration: 0.2, animations: {
                     
-                    self.tableView.hidden = true
+                    self.tableView.isHidden = true
                     
                 })
             }
-            else if text.characters.count == 0 {
-                self.mentionQuery.removeAtIndex(self.mentionQuery.endIndex.predecessor())
+            else if text.count == 0 {
+                self.mentionQuery.remove(at: self.mentionQuery.index(before: self.mentionQuery.endIndex))
                 
             }
             else {
                 self.mentionQuery += text
                 
             }
-        }
-        else {
+        } else {
             if text == self.mentionCharater && ( range.location == 0 || lastCharacter == " ") { /* (Beginning of textView) OR (space then @) */
                 
                 self.isMentioning = true
                 self.startMentionIndex = range.location
-                UIView.animateWithDuration(0.2, animations: {
-                    self.tableView.hidden = false
+                UIView.animate(withDuration: 0.2, animations: {
+                    self.tableView.isHidden = false
                 })
                 
             }
@@ -207,15 +207,15 @@ class OEMentions: NSObject, UITextViewDelegate, UITableViewDelegate, UITableView
     
     //MARK: Keyboard will show NSNotification:
     
-    func keyboardWillShow(notification:NSNotification) {
+    @objc func keyboardWillShow(notification:NSNotification) {
         
-        let userInfo:NSDictionary = notification.userInfo!
-        let keyboardFrame:NSValue = userInfo.valueForKey(UIKeyboardFrameEndUserInfoKey) as! NSValue
-        let keyboardRectangle = keyboardFrame.CGRectValue()
+        let userInfo:NSDictionary = notification.userInfo! as NSDictionary
+        let keyboardFrame:NSValue = userInfo.value(forKey: UIResponder.keyboardFrameEndUserInfoKey) as! NSValue
+        let keyboardRectangle = keyboardFrame.cgRectValue
         let thekeyboardHeight = keyboardRectangle.height
         self.keyboardHieght = thekeyboardHeight
         
-        UIView.animateWithDuration(0.3, animations: {
+        UIView.animate(withDuration: 0.3, animations: {
             
             self.updatePosition()
             
@@ -227,79 +227,74 @@ class OEMentions: NSObject, UITextViewDelegate, UITableViewDelegate, UITableView
     //Mentions UITableView init
     func initMentionsList(){
         
-        tableView = UITableView(frame: CGRectMake(0, 0, self.mainView!.frame.width, 100), style: UITableViewStyle.Plain)
+        tableView = UITableView(frame: CGRect(x: 0, y: 0, width: self.mainView!.frame.width, height: 100), style: UITableView.Style.plain)
         tableView.delegate = self
         tableView.dataSource = self
         tableView.tableFooterView = UIView()
         tableView.allowsSelection = true
-        tableView.separatorColor = UIColor.clearColor()
-        tableView.registerClass(UITableViewCell.self, forCellReuseIdentifier: "cell")
+        tableView.separatorColor = UIColor.clear
+        tableView.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
         self.mainView!.addSubview(self.tableView)
         
-        self.tableView.hidden = true
+        self.tableView.isHidden = true
     }
     
     
     //MARK: Mentions UITableView deleget functions:
     
-    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return self.oeObjects!.count
     }
     
-    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        
-        let cell:UITableViewCell=UITableViewCell(style: UITableViewCellStyle.Subtitle, reuseIdentifier: "cell")
-        cell.backgroundColor = UIColor.clearColor()
-        cell.selectionStyle = UITableViewCellSelectionStyle.None
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell:UITableViewCell = UITableViewCell(style: UITableViewCell.CellStyle.subtitle, reuseIdentifier: "cell")
+        cell.backgroundColor = UIColor.clear
+        cell.selectionStyle = UITableViewCell.SelectionStyle.none
         cell.textLabel!.text = oeObjects![indexPath.row].name
         
         return cell
-        
     }
-    
-    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        
-        addMentionToTextView(oeObjects![indexPath.row].name!)
+
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        addMentionToTextView(name: oeObjects![indexPath.row].name!)
         
         if delegate != nil {
-            self.delegate!.mentionSelected(oeObjects![indexPath.row].id!, name: oeObjects![indexPath.row].name!)
+            self.delegate!.mentionSelected(id: oeObjects![indexPath.row].id!, name: oeObjects![indexPath.row].name!)
         }
-                
+        
         self.mentionQuery = ""
         self.isMentioning = false
-        UIView.animateWithDuration(0.2, animations: {
-            self.tableView.hidden = true
+        UIView.animate(withDuration: 0.2, animations: {
+            self.tableView.isHidden = true
         })
-        
     }
-    
     
     // Add a mention name to the UITextView
     func addMentionToTextView(name: String){
         
-        mentionsIndexes[self.startMentionIndex] = name.characters.count
+        mentionsIndexes[self.startMentionIndex] = name.count
         
-        let range: Range<String.Index> = self.textView!.text.rangeOfString("@" + self.mentionQuery)!
-        self.textView!.text.replaceRange(range, with: name)
+        let range: Range<String.Index> = self.textView!.text.range(of: "@" + self.mentionQuery)!
+        self.textView!.text.replaceSubrange(range, with: name)
         
         let theText = self.textView!.text + " "
-        let theEndIndex = self.startMentionIndex + name.characters.count
+        let theEndIndex = self.startMentionIndex + name.count
         
         let attributedString: NSMutableAttributedString = NSMutableAttributedString(string: theText)
         
         for (startIndex, length) in mentionsIndexes {
             // Add attributes for the mention
-            attributedString.addAttribute(NSForegroundColorAttributeName, value: nameColor, range: NSMakeRange(startIndex, length))
-            attributedString.addAttribute(NSFontAttributeName, value: nameFont, range: NSMakeRange(startIndex, length))
+            attributedString.addAttribute(NSAttributedString.Key.foregroundColor, value: nameColor, range: NSMakeRange(startIndex, length))
+            attributedString.addAttribute(NSAttributedString.Key.font, value: nameFont, range: NSMakeRange(startIndex, length))
         }
         
         // Add for the rest
-        attributedString.addAttribute(NSForegroundColorAttributeName, value: notMentionColor, range: NSMakeRange(theEndIndex, 1))
+        attributedString.addAttribute(NSAttributedString.Key.foregroundColor, value: notMentionColor, range: NSMakeRange(theEndIndex, 1))
         
         
         self.textView!.attributedText = attributedString
         
-        self.textView!.scrollEnabled = false
+        self.textView!.isScrollEnabled = false
         self.textView!.sizeToFit()
         self.textView!.frame.size.width = textViewWidth!
         
@@ -313,15 +308,15 @@ class OEMentions: NSObject, UITextViewDelegate, UITableViewDelegate, UITableView
         
         if containerView != nil {
             self.containerView!.frame.size.height = self.containerHieght! + ( self.textView!.frame.height -  self.textViewHieght! )
-            self.containerView!.frame.origin.y = UIScreen.mainScreen().bounds.height - self.keyboardHieght! - self.containerView!.frame.height
+            self.containerView!.frame.origin.y = UIScreen.main.bounds.height - self.keyboardHieght! - self.containerView!.frame.height
             
             self.textView!.frame.origin.y = self.textViewYPosition!
             
-            self.tableView.frame.size.height = UIScreen.mainScreen().bounds.height - self.keyboardHieght! - self.containerView!.frame.size.height
+            self.tableView.frame.size.height = UIScreen.main.bounds.height - self.keyboardHieght! - self.containerView!.frame.size.height
         }
         else {
-            self.textView!.frame.origin.y = UIScreen.mainScreen().bounds.height - self.keyboardHieght! - self.textView!.frame.height
-            self.tableView.frame.size.height = UIScreen.mainScreen().bounds.height - self.keyboardHieght! - self.textView!.frame.height
+            self.textView!.frame.origin.y = UIScreen.main.bounds.height - self.keyboardHieght! - self.textView!.frame.height
+            self.tableView.frame.size.height = UIScreen.main.bounds.height - self.keyboardHieght! - self.textView!.frame.height
         }
         
         
@@ -350,8 +345,7 @@ extension UITextView
     func textRangeFromNSRange(range:NSRange) -> UITextRange?
     {
         let beginning = self.beginningOfDocument
-        guard let start = self.positionFromPosition(beginning, offset: range.location), end = self.positionFromPosition(start, offset: range.length) else { return nil}
-        
-        return self.textRangeFromPosition(start, toPosition: end)
+        guard let start = self.position(from: beginning, offset: range.location), let end = self.position(from: start, offset: range.length) else { return nil}
+        return self.textRange(from: start, to: end)
     }
 }
