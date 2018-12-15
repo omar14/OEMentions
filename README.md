@@ -7,13 +7,13 @@ An easy way to add mentions to uitextview like Facebook and Instagram. It also i
 
 
 
-##Main features
+## Main features
 * Expandale UITextView (also expandle UITextView container)
 * Show and manage position of users list when "@" is typed ("@" can be changed to any character)
 * Customizable mention text
 
 
-##Installation
+## Installation
 
 All you need is to import `OEMentions.swift` to your project folder
 
@@ -69,7 +69,7 @@ You can see a full implementation in ViewController.swift
   ```
 
 
-##Customization   
+## Customization   
 
 ```swift
 changeMentionCharacter(character: String)
@@ -86,7 +86,7 @@ OEMentions.nameFont
 OEMentions.notMentionColor
 ```
 
-##License
+## License
 
 MIT License
 
