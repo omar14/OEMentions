@@ -1,6 +1,0 @@
-framework module OEMentions {
-  umbrella header "OEMentions-umbrella.h"
-
-  export *
-  module * { export * }
-}

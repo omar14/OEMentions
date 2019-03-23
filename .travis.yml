@@ -1,14 +1,10 @@
-osx_image: xcode10.1
 language: objective-c
-# cache: cocoapods
-# podfile: Example/Podfile
-# before_install:
-# - gem install cocoapods # Since Travis is not always on latest version
-# - pod install --project-directory=Example
+
+osx_image: xcode10.1
 env:
   matrix:
     - TEST_SDK=iphonesimulator12.1 OS=12.1 NAME='iPhone XR'
     - TEST_SDK=iphonesimulator12.1 OS=12.1 NAME='iPhone 7'
+
 script:
-- set -o pipefail && xcodebuild test -enableCodeCoverage YES -workspace Example/OEMentions.xcworkspace -scheme OEMentions-Example -sdk $TEST_SDK -destination "platform=iOS Simulator,OS=$OS,name=$NAME" ONLY_ACTIVE_ARCH=YES
-- pod lib lint
+  - set -o pipefail && xcodebuild test -enableCodeCoverage YES -project OEMentions.xcodeproj -scheme OEMentions -sdk $TEST_SDK -destination "platform=iOS Simulator,OS=$OS,name=$NAME" ONLY_ACTIVE_ARCH=YES
