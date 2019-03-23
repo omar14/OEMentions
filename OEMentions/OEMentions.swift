@@ -129,7 +129,7 @@ public class OEMentions: NSObject, UITextViewDelegate, UITableViewDelegate, UITa
     
     //MARK: UITextView delegate functions:
     
-    func textViewDidEndEditing(_ textView: UITextView) {
+    private func textViewDidEndEditing(_ textView: UITextView) {
         
         self.mentionQuery = ""
         self.isMentioning = false
@@ -139,7 +139,7 @@ public class OEMentions: NSObject, UITextViewDelegate, UITableViewDelegate, UITa
         
     }
     
-    func textViewDidChange(_ textView: UITextView) {
+    private func textViewDidChange(_ textView: UITextView) {
         
         self.textView!.isScrollEnabled = false
         self.textView!.sizeToFit()
@@ -150,7 +150,7 @@ public class OEMentions: NSObject, UITextViewDelegate, UITableViewDelegate, UITa
         
     }
     
-    func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
+    private func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
         
         let str = String(textView.text)
         var lastCharacter = "nothing"
@@ -260,7 +260,7 @@ public class OEMentions: NSObject, UITextViewDelegate, UITableViewDelegate, UITa
         return cell
     }
     
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+    private func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         addMentionToTextView(name: oeObjects![indexPath.row].name!)
         
         if delegate != nil {
