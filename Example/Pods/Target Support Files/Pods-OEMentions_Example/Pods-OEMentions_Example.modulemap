@@ -1,0 +1,6 @@
+framework module Pods_OEMentions_Example {
+  umbrella header "Pods-OEMentions_Example-umbrella.h"
+
+  export *
+  module * { export * }
+}

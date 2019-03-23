@@ -1,0 +1,22 @@
+{
+  "name": "OEMentions",
+  "version": "0.1.0",
+  "summary": "A short description of OEMentions.",
+  "description": "TODO: Add long description of the pod here.",
+  "homepage": "https://github.com/omar14/OEMentions",
+  "license": {
+    "type": "MIT",
+    "file": "LICENSE"
+  },
+  "authors": {
+    "omar14": "omaressa10@gmail.com"
+  },
+  "source": {
+    "git": "https://github.com/omar14/OEMentions.git",
+    "tag": "0.1.0"
+  },
+  "platforms": {
+    "ios": "8.0"
+  },
+  "source_files": "OEMentions/Classes/**/*"
+}
