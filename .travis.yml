@@ -10,5 +10,5 @@ env:
     - TEST_SDK=iphonesimulator12.1 OS=12.1 NAME='iPhone XR'
     - TEST_SDK=iphonesimulator12.1 OS=12.1 NAME='iPhone 7'
 script:
-- set -o pipefail && xcodebuild test -enableCodeCoverage YES -workspace Example/${POD_NAME}.xcworkspace -scheme ${POD_NAME}-Example -sdk $TEST_SDK -destination "platform=iOS Simulator,OS=$OS,name=$NAME" ONLY_ACTIVE_ARCH=YES
+- set -o pipefail && xcodebuild test -enableCodeCoverage YES -workspace Example/OEMentions.xcworkspace -scheme OEMentions-Example -sdk $TEST_SDK -destination "platform=iOS Simulator,OS=$OS,name=$NAME" ONLY_ACTIVE_ARCH=YES
 - pod lib lint
