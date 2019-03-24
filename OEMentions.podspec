@@ -1,11 +1,11 @@
 Pod::Spec.new do |spec|
 
   spec.name         = "OEMentions"
-  spec.version      = "0.0.2"
-  spec.summary      = "A CocoaPods library written in Swift"
+  spec.version      = "0.1.0"
+  spec.summary      = "An easy way to add mentions to UITextView like Facebook and Instagram"
 
   spec.description  = <<-DESC
-This CocoaPods library helps you perform mentions.
+An easy way to add mentions to UITextView like Facebook and Instagram. It also include a tableview to show the users list to choose from. The component is written in Swift.
                    DESC
 
   spec.homepage     = "https://github.com/omar14/OEMentions"

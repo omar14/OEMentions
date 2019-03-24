@@ -9,7 +9,7 @@
 
 import UIKit
 
-protocol OEMentionsDelegate
+public protocol OEMentionsDelegate
 {
     // To respond to the selected name
     func mentionSelected(id:Int, name:String)
@@ -80,7 +80,7 @@ public class OEMentions: NSObject, UITextViewDelegate, UITableViewDelegate, UITa
     //MARK: - init
     
     //MARK: class init without container
-    init(textView:UITextView, mainView:UIView, oeObjects:[OEObject]){
+    public init(textView:UITextView, mainView:UIView, oeObjects:[OEObject]){
         super.init()
         
         self.mainView = mainView
@@ -99,7 +99,7 @@ public class OEMentions: NSObject, UITextViewDelegate, UITableViewDelegate, UITa
     }
     
     //MARK: class init with container
-    init(containerView:UIView, textView:UITextView, mainView:UIView, oeObjects:[OEObject]){
+    public init(containerView:UIView, textView:UITextView, mainView:UIView, oeObjects:[OEObject]){
         super.init()
         
         self.containerView = containerView
