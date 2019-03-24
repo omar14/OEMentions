@@ -358,7 +358,7 @@ public class OEObject {
     var id:Int?
     var name:String?
     
-    init(id:Int, name:String){
+    public init(id:Int, name:String){
         self.id = id
         self.name = name
     }

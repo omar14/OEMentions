@@ -1,7 +1,7 @@
 Pod::Spec.new do |spec|
 
   spec.name         = "OEMentions"
-  spec.version      = "0.1.0"
+  spec.version      = "0.1.2"
   spec.summary      = "An easy way to add mentions to UITextView like Facebook and Instagram"
 
   spec.description  = <<-DESC
