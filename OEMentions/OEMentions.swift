@@ -4,7 +4,7 @@
 //  OEMentions
 //
 //  Created by Omar Alessa on 7/31/16.
-//  Copyright © 2016 omaressa. All rights reserved.
+//  Copyright © 2019 omaressa. All rights reserved.
 //
 
 import UIKit
@@ -29,6 +29,9 @@ public class OEMentions: NSObject, UITextViewDelegate, UITableViewDelegate, UITa
     
     // List of names to show in the list
     var oeObjects:[OEObject]?
+    
+    // The list after the query filter
+    var theFilteredList = [OEObject]()
     
     // [Index:Length] of added mentions to textview
     var mentionsIndexes = [Int:Int]()
@@ -74,6 +77,8 @@ public class OEMentions: NSObject, UITextViewDelegate, UITableViewDelegate, UITa
     
     var containerHieght:CGFloat?
     
+    //MARK: - init
+    
     //MARK: class init without container
     init(textView:UITextView, mainView:UIView, oeObjects:[OEObject]){
         super.init()
@@ -114,22 +119,9 @@ public class OEMentions: NSObject, UITextViewDelegate, UITableViewDelegate, UITa
     }
     
     
-    // Set the mention character. Should be one character only, default is "@"
-    func changeMentionCharacter(character: String){
-        if character.count == 1 && character != " " {
-            self.mentionCharater = character
-        }
-    }
+    //MARK: - UITextView delegate functions:
     
-    // Change tableview background color
-    func changeMentionTableviewBackground(color: UIColor){
-        self.tableView.backgroundColor = color
-    }
-    
-    
-    //MARK: UITextView delegate functions:
-    
-    private func textViewDidEndEditing(_ textView: UITextView) {
+    public func textViewDidEndEditing(_ textView: UITextView) {
         
         self.mentionQuery = ""
         self.isMentioning = false
@@ -139,18 +131,11 @@ public class OEMentions: NSObject, UITextViewDelegate, UITableViewDelegate, UITa
         
     }
     
-    private func textViewDidChange(_ textView: UITextView) {
-        
-        self.textView!.isScrollEnabled = false
-        self.textView!.sizeToFit()
-        self.textView!.frame.size.width = textViewWidth!
-        
+    public func textViewDidChange(_ textView: UITextView) {
         updatePosition()
-        
-        
     }
     
-    private func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
+    public func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
         
         let str = String(textView.text)
         var lastCharacter = "nothing"
@@ -187,17 +172,22 @@ public class OEMentions: NSObject, UITextViewDelegate, UITableViewDelegate, UITa
             }
             else if text.count == 0 {
                 self.mentionQuery.remove(at: self.mentionQuery.index(before: self.mentionQuery.endIndex))
-                
+                self.filterList(query: self.mentionQuery)
+                self.tableView.reloadData()
             }
             else {
                 self.mentionQuery += text
-                
+                self.filterList(query: self.mentionQuery)
+                self.tableView.reloadData()
             }
         } else {
             if text == self.mentionCharater && ( range.location == 0 || lastCharacter == " ") { /* (Beginning of textView) OR (space then @) */
                 
+                
                 self.isMentioning = true
                 self.startMentionIndex = range.location
+                theFilteredList = oeObjects!
+                self.tableView.reloadData()
                 UIView.animate(withDuration: 0.2, animations: {
                     self.tableView.isHidden = false
                 })
@@ -210,9 +200,9 @@ public class OEMentions: NSObject, UITextViewDelegate, UITableViewDelegate, UITa
     
     
     
-    //MARK: Keyboard will show NSNotification:
+    //MARK: - Keyboard will show NSNotification:
     
-    @objc func keyboardWillShow(notification:NSNotification) {
+    @objc public func keyboardWillShow(notification:NSNotification) {
         
         let userInfo:NSDictionary = notification.userInfo! as NSDictionary
         let keyboardFrame:NSValue = userInfo.value(forKey: UIResponder.keyboardFrameEndUserInfoKey) as! NSValue
@@ -229,53 +219,39 @@ public class OEMentions: NSObject, UITextViewDelegate, UITableViewDelegate, UITa
     }
     
     
-    //Mentions UITableView init
-    func initMentionsList(){
-        
-        tableView = UITableView(frame: CGRect(x: 0, y: 0, width: self.mainView!.frame.width, height: 100), style: UITableView.Style.plain)
-        tableView.delegate = self
-        tableView.dataSource = self
-        tableView.tableFooterView = UIView()
-        tableView.allowsSelection = true
-        tableView.separatorColor = UIColor.clear
-        tableView.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
-        self.mainView!.addSubview(self.tableView)
-        
-        self.tableView.isHidden = true
-    }
     
-    
-    //MARK: Mentions UITableView deleget functions:
+    //MARK: - UITableView deleget functions:
     
     public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return self.oeObjects!.count
+        return self.theFilteredList.count
     }
     
     public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell:UITableViewCell = UITableViewCell(style: UITableViewCell.CellStyle.subtitle, reuseIdentifier: "cell")
         cell.backgroundColor = UIColor.clear
         cell.selectionStyle = UITableViewCell.SelectionStyle.none
-        cell.textLabel!.text = oeObjects![indexPath.row].name
+        cell.textLabel!.text = theFilteredList[indexPath.row].name
         
         return cell
     }
     
-    private func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        addMentionToTextView(name: oeObjects![indexPath.row].name!)
+    public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        addMentionToTextView(name: theFilteredList[indexPath.row].name!)
         
         if delegate != nil {
-            self.delegate!.mentionSelected(id: oeObjects![indexPath.row].id!, name: oeObjects![indexPath.row].name!)
+            self.delegate!.mentionSelected(id: theFilteredList[indexPath.row].id!, name: theFilteredList[indexPath.row].name!)
         }
         
         self.mentionQuery = ""
         self.isMentioning = false
+        self.theFilteredList = oeObjects!
         UIView.animate(withDuration: 0.2, animations: {
             self.tableView.isHidden = true
         })
     }
     
     // Add a mention name to the UITextView
-    func addMentionToTextView(name: String){
+    public func addMentionToTextView(name: String){
         
         mentionsIndexes[self.startMentionIndex] = name.count
         
@@ -299,24 +275,69 @@ public class OEMentions: NSObject, UITextViewDelegate, UITableViewDelegate, UITa
         
         self.textView!.attributedText = attributedString
         
-        self.textView!.isScrollEnabled = false
-        self.textView!.sizeToFit()
-        self.textView!.frame.size.width = textViewWidth!
-        
         updatePosition()
         
     }
     
+    //MARK: - Utilities
+    
+    
+    //Mentions UITableView init
+    public func initMentionsList(){
+        
+        tableView = UITableView(frame: CGRect(x: 0, y: 0, width: self.mainView!.frame.width, height: 100), style: UITableView.Style.plain)
+        tableView.delegate = self
+        tableView.dataSource = self
+        tableView.tableFooterView = UIView()
+        tableView.allowsSelection = true
+        tableView.separatorColor = UIColor.clear
+        tableView.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
+        self.mainView!.addSubview(self.tableView)
+        
+        self.tableView.isHidden = true
+    }
+    
+    
+    public func filterList(query: String) {
+        
+        theFilteredList.removeAll()
+        
+        if query.isEmpty {
+            theFilteredList = oeObjects!
+        }
+        
+        if let myOEobjects = oeObjects {
+            for object in myOEobjects {
+                if object.name?.lowercased().contains(query.lowercased()) ?? false {
+                    theFilteredList.append(object)
+                }
+            }
+        }
+        
+    }
+    
+    // Set the mention character. Should be one character only, default is "@"
+    public func changeMentionCharacter(character: String){
+        if character.count == 1 && character != " " {
+            self.mentionCharater = character
+        }
+    }
+    
+    // Change tableview background color
+    public func changeMentionTableviewBackground(color: UIColor){
+        self.tableView.backgroundColor = color
+    }
     
     // Update views potision for the textview and tableview
-    func updatePosition(){
+    public func updatePosition(){
         
         if containerView != nil {
+            
             self.containerView!.frame.size.height = self.containerHieght! + ( self.textView!.frame.height -  self.textViewHieght! )
             self.containerView!.frame.origin.y = UIScreen.main.bounds.height - self.keyboardHieght! - self.containerView!.frame.height
-            
+
             self.textView!.frame.origin.y = self.textViewYPosition!
-            
+
             self.tableView.frame.size.height = UIScreen.main.bounds.height - self.keyboardHieght! - self.containerView!.frame.size.height
         }
         else {
@@ -332,7 +353,7 @@ public class OEMentions: NSObject, UITextViewDelegate, UITableViewDelegate, UITa
 
 // OEMentions object (id,name)
 
-class OEObject {
+public class OEObject {
     
     var id:Int?
     var name:String?
@@ -347,7 +368,7 @@ class OEObject {
 
 extension UITextView
 {
-    func textRangeFromNSRange(range:NSRange) -> UITextRange?
+    public func textRangeFromNSRange(range:NSRange) -> UITextRange?
     {
         let beginning = self.beginningOfDocument
         guard let start = self.position(from: beginning, offset: range.location), let end = self.position(from: start, offset: range.length) else { return nil}
