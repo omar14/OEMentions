@@ -15,7 +15,15 @@ An easy way to add mentions to uitextview like Facebook and Instagram. It also i
 
 ## Installation
 
-All you need is to import `OEMentions.swift` to your project folder
+### Cocoapods
+
+```swift
+pod 'OEMentions'
+```
+
+### Manual
+
+You can import `OEMentions.swift` file manually to your project folder
 
 
 ## Usage Example
