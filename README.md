@@ -1,6 +1,13 @@
 # OEMentions
+
+[![Platforms](https://img.shields.io/badge/platform-iOS-yellow.svg)]()
+[![Language](https://img.shields.io/badge/language-Swift_5.0-orange.svg)]()
+[![CocoaPod](https://img.shields.io/badge/pod-0.1.3-lightblue.svg)]()
+[![License](https://img.shields.io/badge/license-MIT-blue.svg)]()
+
 An easy way to add mentions to uitextview like Facebook and Instagram. It also include a tableview to show the users list to choose from. The component is written in 
 **Swift**.
+
 
 ![demo2_gif](https://cloud.githubusercontent.com/assets/3969198/17277971/849e7a16-5758-11e6-9589-d6f3f0a8c8e4.gif)
 ![demo3_gif](https://cloud.githubusercontent.com/assets/3969198/17277992/17f54448-5759-11e6-8107-ac5b0f9deb08.gif)
