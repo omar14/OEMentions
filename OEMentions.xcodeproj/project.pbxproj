@@ -13,6 +13,8 @@
 		071978B72246F7AF00A0F09D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 071978B62246F7AF00A0F09D /* Assets.xcassets */; };
 		071978BA2246F7AF00A0F09D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 071978B82246F7AF00A0F09D /* LaunchScreen.storyboard */; };
 		071978BF2246F9BE00A0F09D /* OEMentions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0784A2A92246B20100C32BFB /* OEMentions.swift */; };
+		07218FC12370A4940013082B /* OEMentions.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0784A28F2246B1B400C32BFB /* OEMentions.framework */; };
+		07218FC22370A4940013082B /* OEMentions.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 0784A28F2246B1B400C32BFB /* OEMentions.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		0784A2992246B1B400C32BFB /* OEMentions.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0784A28F2246B1B400C32BFB /* OEMentions.framework */; };
 		0784A29E2246B1B400C32BFB /* OEMentionsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0784A29D2246B1B400C32BFB /* OEMentionsTests.swift */; };
 		0784A2A02246B1B400C32BFB /* OEMentions.h in Headers */ = {isa = PBXBuildFile; fileRef = 0784A2922246B1B400C32BFB /* OEMentions.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -20,6 +22,13 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		07218FC32370A4940013082B /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0784A2862246B1B400C32BFB /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 0784A28E2246B1B400C32BFB;
+			remoteInfo = OEMentions;
+		};
 		0784A29A2246B1B400C32BFB /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 0784A2862246B1B400C32BFB /* Project object */;
@@ -28,6 +37,20 @@
 			remoteInfo = OEMentions;
 		};
 /* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		07218FC52370A4940013082B /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				07218FC22370A4940013082B /* OEMentions.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		071978AD2246F7AF00A0F09D /* OEMentionsExample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = OEMentionsExample.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -51,6 +74,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				07218FC12370A4940013082B /* OEMentions.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -85,6 +109,13 @@
 			path = OEMentionsExample;
 			sourceTree = "<group>";
 		};
+		07218FC02370A4940013082B /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		0784A2852246B1B400C32BFB = {
 			isa = PBXGroup;
 			children = (
@@ -92,6 +123,7 @@
 				0784A29C2246B1B400C32BFB /* OEMentionsTests */,
 				071978AE2246F7AF00A0F09D /* OEMentionsExample */,
 				0784A2902246B1B400C32BFB /* Products */,
+				07218FC02370A4940013082B /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -145,10 +177,12 @@
 				071978A92246F7AF00A0F09D /* Sources */,
 				071978AA2246F7AF00A0F09D /* Frameworks */,
 				071978AB2246F7AF00A0F09D /* Resources */,
+				07218FC52370A4940013082B /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				07218FC42370A4940013082B /* PBXTargetDependency */,
 			);
 			name = OEMentionsExample;
 			productName = OEMentionsExample;
@@ -290,6 +324,11 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		07218FC42370A4940013082B /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 0784A28E2246B1B400C32BFB /* OEMentions */;
+			targetProxy = 07218FC32370A4940013082B /* PBXContainerItemProxy */;
+		};
 		0784A29B2246B1B400C32BFB /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 0784A28E2246B1B400C32BFB /* OEMentions */;

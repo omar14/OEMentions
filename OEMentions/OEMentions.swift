@@ -181,8 +181,9 @@ public class OEMentions: NSObject, UITextViewDelegate, UITableViewDelegate, UITa
                 self.tableView.reloadData()
             }
         } else {
-            if text == self.mentionCharater && ( range.location == 0 || lastCharacter == " ") { /* (Beginning of textView) OR (space then @) */
-                
+            
+            /* (Beginning of textView) OR (space then @) OR (Beginning of new line) */
+            if text == self.mentionCharater && ( range.location == 0 || lastCharacter == " " || lastCharacter == "\n") {
                 
                 self.isMentioning = true
                 self.startMentionIndex = range.location

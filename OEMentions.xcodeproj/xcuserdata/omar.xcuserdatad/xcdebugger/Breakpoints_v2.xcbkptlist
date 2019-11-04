@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Bucket
+   uuid = "ED5F631F-EFAC-4E20-B2D4-B3EF24CAB1FD"
    type = "1"
    version = "2.0">
    <Breakpoints>
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
+            uuid = "35BA5AA6-B56F-445D-9D8F-A3E09DD23E85"
             shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
@@ -17,6 +19,54 @@
             endingLineNumber = "144"
             landmarkName = "textView(_:shouldChangeTextIn:replacementText:)"
             landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "725EDD03-AEB7-48C4-AEBA-F918995C357D"
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "OEMentions/OEMentions.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "140"
+            endingLineNumber = "140"
+            landmarkName = "textView(_:shouldChangeTextIn:replacementText:)"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "725EDD03-AEB7-48C4-AEBA-F918995C357D - 96118173945a0818"
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "OEMentionsExample.OEMentions.textView(_: __C.UITextView, shouldChangeTextIn: __C._NSRange, replacementText: Swift.String) -&gt; Swift.Bool"
+                  moduleName = "OEMentionsExample"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/omar/Desktop/Projects/OEMentions/OEMentions/OEMentions.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "140"
+                  endingLineNumber = "140"
+                  offsetFromSymbolStart = "424">
+               </Location>
+               <Location
+                  uuid = "725EDD03-AEB7-48C4-AEBA-F918995C357D - 42c258714ec6250d"
+                  shouldBeEnabled = "No"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "OEMentions.OEMentions.textView(_: __C.UITextView, shouldChangeTextIn: __C._NSRange, replacementText: Swift.String) -&gt; Swift.Bool"
+                  moduleName = "OEMentions"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/omar/Desktop/Projects/OEMentions/OEMentions/OEMentions.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "140"
+                  endingLineNumber = "140"
+                  offsetFromSymbolStart = "424">
+               </Location>
+            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>
