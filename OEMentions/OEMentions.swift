@@ -260,7 +260,6 @@ public class OEMentions: NSObject, UITextViewDelegate, UITableViewDelegate, UITa
         self.textView!.text.replaceSubrange(range, with: name)
         
         let theText = self.textView!.text + " "
-        let theEndIndex = self.startMentionIndex + name.count
         
         let attributedString: NSMutableAttributedString = NSMutableAttributedString(string: theText)
         
