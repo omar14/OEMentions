@@ -64,7 +64,7 @@ public class OEMentions: NSObject, UITextViewDelegate, UITableViewDelegate, UITa
     var nameFont = UIFont.boldSystemFont(ofSize: 14.0)
     
     // Color if the rest of the UITextView text
-    var notMentionColor = UIColor.black
+    var notMentionColor = UIColor.label
     
     
     // OEMention Delegate
@@ -264,14 +264,24 @@ public class OEMentions: NSObject, UITextViewDelegate, UITableViewDelegate, UITa
         
         let attributedString: NSMutableAttributedString = NSMutableAttributedString(string: theText)
         
+        
+        // Add color attribute for the whole text
+        if let count = self.textView?.text.count {
+            attributedString.addAttribute(NSAttributedString.Key.foregroundColor, value: notMentionColor, range: NSMakeRange(0, count))
+        }
+
+        
+        // Add color & font attributes for the mention
         for (startIndex, length) in mentionsIndexes {
-            // Add attributes for the mention
             attributedString.addAttribute(NSAttributedString.Key.foregroundColor, value: nameColor, range: NSMakeRange(startIndex, length))
             attributedString.addAttribute(NSAttributedString.Key.font, value: nameFont, range: NSMakeRange(startIndex, length))
         }
         
-        // Add for the rest
-        attributedString.addAttribute(NSAttributedString.Key.foregroundColor, value: notMentionColor, range: NSMakeRange(theEndIndex, 1))
+        
+        // Add color attribute the next text
+        if let count = self.textView?.text.count {
+            attributedString.addAttribute(NSAttributedString.Key.foregroundColor, value: notMentionColor, range: NSMakeRange(count, 1))
+        }
         
         
         self.textView!.attributedText = attributedString
